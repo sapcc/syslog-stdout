@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
@@ -15,7 +16,9 @@ const (
 	socketPath = "/dev/log"
 )
 
-type Syslog struct{}
+type Syslog struct {
+	Hostname string
+}
 
 func (syslog Syslog) getFacility(code int) string {
 	switch code >> 3 {
@@ -109,21 +112,30 @@ func (syslog Syslog) listen(connection net.Conn) {
 	}
 }
 
+func (syslog Syslog) report(facility, message string) {
+	fmt.Printf("%s %s %s %s\n",
+		time.Now().UTC().Format("Jan 2 15:04:05"),
+		syslog.Hostname,
+		facility,
+		strings.TrimSuffix(message, "\n"),
+	)
+}
+
 func (syslog Syslog) readData(data []byte) {
-	header := "unknown:unknown"
+	facility := "unknown.unknown"
 	message := string(data)
 
 	endOfCode := strings.Index(message, ">")
 	if -1 != endOfCode && 5 > endOfCode {
 		code, error := strconv.Atoi(string(data[1:endOfCode]))
 		if nil == error {
-			header = fmt.Sprintf("%s:%s", syslog.getFacility(code), syslog.getSeverity(code))
+			facility = fmt.Sprintf("%s.%s", syslog.getFacility(code), syslog.getSeverity(code))
 		}
 
 		message = string(data[endOfCode+1:])
 	}
 
-	fmt.Printf("%s: %s\n", header, strings.TrimSuffix(message, "\n"))
+	syslog.report(facility, message)
 }
 
 func (syslog Syslog) run() {
@@ -144,6 +156,13 @@ func (syslog Syslog) run() {
 }
 
 func main() {
-	syslog := Syslog{}
+	var (
+		syslog Syslog
+		err    error
+	)
+	syslog.Hostname, err = os.Hostname()
+	if err != nil {
+		syslog.report("syslog.err", "syslog-stdout: cannot determine hostname: "+err.Error())
+	}
 	syslog.run()
 }
