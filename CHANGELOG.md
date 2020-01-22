@@ -1,5 +1,8 @@
 # CHANGELOG
 
+* 1.2.0 (2020-01-22)
+  - Convert to go module.
+
 * 1.1.1 (2016-03-02)
   - Fix analyze of facility and severity.
 

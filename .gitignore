@@ -1,2 +1,3 @@
-dist/*
-!dist/.gitkeep
+# build artifacts
+.gopath/pkg/
+build/
