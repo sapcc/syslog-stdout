@@ -15,6 +15,17 @@ const (
 	socketPath = "/dev/log"
 )
 
+var hostname = findHostname()
+
+func findHostname() string {
+	name, err := os.Hostname()
+	if err != nil {
+		log.Fatal("cannot determine hostname: " + err.Error())
+		return "unknown"
+	}
+	return name
+}
+
 var (
 	facilities = []string{
 		"kern", "user", "mail", "daemon", "auth", "syslog", "lpr", "news", //0..7
@@ -33,12 +44,7 @@ func indexInto(list []string, idx int) string {
 	return list[idx]
 }
 
-//Syslog contains the application state.
-type Syslog struct {
-	Hostname string
-}
-
-func (syslog Syslog) listen(connection net.Conn) {
+func listen(connection net.Conn) {
 	var buffer [bufferSize]byte
 
 	for {
@@ -47,21 +53,12 @@ func (syslog Syslog) listen(connection net.Conn) {
 			log.Fatal("Read error:", err)
 		}
 		if size > 0 {
-			syslog.readData(buffer[0:size])
+			readData(buffer[0:size])
 		}
 	}
 }
 
-func (syslog Syslog) report(facility, message string) {
-	fmt.Printf("%s %s %s %s\n",
-		time.Now().UTC().Format("Jan 2 15:04:05"),
-		syslog.Hostname,
-		facility,
-		strings.TrimSuffix(message, "\n"),
-	)
-}
-
-func (syslog Syslog) readData(data []byte) {
+func readData(data []byte) {
 	facility := "unknown.unknown"
 	message := string(data)
 
@@ -75,10 +72,15 @@ func (syslog Syslog) readData(data []byte) {
 		message = string(data[endOfCode+1:])
 	}
 
-	syslog.report(facility, message)
+	fmt.Printf("%s %s %s %s\n",
+		time.Now().UTC().Format("Jan 2 15:04:05"),
+		hostname,
+		facility,
+		strings.TrimSuffix(message, "\n"),
+	)
 }
 
-func (syslog Syslog) run() {
+func main() {
 	if _, err := os.Stat(socketPath); err == nil {
 		os.Remove(socketPath)
 	}
@@ -92,17 +94,5 @@ func (syslog Syslog) run() {
 		log.Fatal("Impossible to change the socket permission.")
 	}
 
-	syslog.listen(connection)
-}
-
-func main() {
-	var (
-		syslog Syslog
-		err    error
-	)
-	syslog.Hostname, err = os.Hostname()
-	if err != nil {
-		syslog.report("syslog.err", "syslog-stdout: cannot determine hostname: "+err.Error())
-	}
-	syslog.run()
+	listen(connection)
 }
