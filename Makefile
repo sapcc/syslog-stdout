@@ -12,6 +12,8 @@ all: build/syslog-stdout
 
 build/syslog-stdout: FORCE
 	$(GO) install $(GO_BUILDFLAGS) -ldflags '$(GO_LDFLAGS)' '$(PKG)'
+build/syslog-generator: util/generator.c
+	$(CC) -o $@ $<
 
 install: FORCE all
 	install -D -m 0755 build/syslog-stdout "$(DESTDIR)$(PREFIX)/bin/syslog-stdout"
