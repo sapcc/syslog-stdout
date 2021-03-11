@@ -104,9 +104,9 @@ func (syslog Syslog) listen(connection net.Conn) {
 
 	for {
 		buffer := make([]byte, bufferSize)
-		size, error := reader.Read(buffer)
-		if error != nil {
-			log.Fatal("Read error:", error)
+		size, err := reader.Read(buffer)
+		if err != nil {
+			log.Fatal("Read error:", err)
 		}
 
 		go syslog.readData(buffer[0:size])
@@ -128,8 +128,8 @@ func (syslog Syslog) readData(data []byte) {
 
 	endOfCode := strings.Index(message, ">")
 	if -1 != endOfCode && 5 > endOfCode {
-		code, error := strconv.Atoi(string(data[1:endOfCode]))
-		if nil == error {
+		code, err := strconv.Atoi(string(data[1:endOfCode]))
+		if err == nil {
 			facility = fmt.Sprintf("%s.%s", syslog.getFacility(code), syslog.getSeverity(code))
 		}
 
@@ -140,16 +140,16 @@ func (syslog Syslog) readData(data []byte) {
 }
 
 func (syslog Syslog) run() {
-	if _, err := os.Stat(socketPath); nil == err {
+	if _, err := os.Stat(socketPath); err == nil {
 		os.Remove(socketPath)
 	}
 
-	connection, error := net.ListenUnixgram("unixgram", &net.UnixAddr{Name: socketPath, Net: "unixgram"})
-	if nil != error {
-		log.Fatal("Listen error:", error)
+	connection, err := net.ListenUnixgram("unixgram", &net.UnixAddr{Name: socketPath, Net: "unixgram"})
+	if err != nil {
+		log.Fatal("Listen error:", err)
 	}
 
-	if err := os.Chmod(socketPath, 0777); nil != err {
+	if err := os.Chmod(socketPath, 0777); err != nil {
 		log.Fatal("Impossible to change the socket permission.")
 	}
 
