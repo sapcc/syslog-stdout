@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
 	"net"
@@ -40,16 +39,16 @@ type Syslog struct {
 }
 
 func (syslog Syslog) listen(connection net.Conn) {
-	reader := bufio.NewReader(connection)
+	var buffer [bufferSize]byte
 
 	for {
-		buffer := make([]byte, bufferSize)
-		size, err := reader.Read(buffer)
+		size, err := connection.Read(buffer[:])
 		if err != nil {
 			log.Fatal("Read error:", err)
 		}
-
-		go syslog.readData(buffer[0:size])
+		if size > 0 {
+			syslog.readData(buffer[0:size])
+		}
 	}
 }
 
