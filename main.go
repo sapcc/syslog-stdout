@@ -16,6 +16,7 @@ const (
 	socketPath = "/dev/log"
 )
 
+//Syslog contains the application state.
 type Syslog struct {
 	Hostname string
 }
@@ -143,7 +144,7 @@ func (syslog Syslog) run() {
 		os.Remove(socketPath)
 	}
 
-	connection, error := net.ListenUnixgram("unixgram", &net.UnixAddr{socketPath, "unixgram"})
+	connection, error := net.ListenUnixgram("unixgram", &net.UnixAddr{Name: socketPath, Net: "unixgram"})
 	if nil != error {
 		log.Fatal("Listen error:", error)
 	}
