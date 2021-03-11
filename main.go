@@ -72,8 +72,10 @@ func readData(data []byte) {
 		message = string(data[endOfCode+1:])
 	}
 
-	fmt.Printf("%s %s %s %s\n",
-		time.Now().UTC().Format("Jan 2 15:04:05"),
+	now := time.Now().UTC()
+	fmt.Printf("%s.%06d %s %s %s\n",
+		now.Format("Jan 2 15:04:05"),
+		now.Nanosecond()/1000, //microsecond precision
 		hostname,
 		facility,
 		strings.TrimSuffix(message, "\n"),
