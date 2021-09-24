@@ -1,17 +1,12 @@
-PKG     = github.com/sapcc/syslog-stdout
-PREFIX := /usr
-
-# NOTE: This repo uses Go modules, and uses a synthetic GOPATH at
-# $(CURDIR)/.gopath that is only used for the build cache. $GOPATH/src/ is
-# empty.
-GO            := GOPATH=$(CURDIR)/.gopath GOBIN=$(CURDIR)/build go
-GO_BUILDFLAGS :=
-GO_LDFLAGS    := -s -w
+PREFIX = /usr
 
 all: build/syslog-stdout
 
+GO_BUILDFLAGS = -mod vendor
+GO_LDFLAGS    =
+
 build/syslog-stdout: FORCE
-	$(GO) install $(GO_BUILDFLAGS) -ldflags '$(GO_LDFLAGS)' '$(PKG)'
+	go build $(GO_BUILDFLAGS) -ldflags '-s -w $(GO_LDFLAGS)' -o $@ .
 build/syslog-generator: util/generator.c
 	$(CC) -o $@ $<
 
@@ -22,8 +17,8 @@ clean: FORCE
 	rm -rf -- build
 
 vendor: FORCE
-	$(GO) mod tidy
-	$(GO) mod vendor
-	$(GO) mod verify
+	go mod tidy
+	go mod vendor
+	go mod verify
 
 .PHONY: FORCE
