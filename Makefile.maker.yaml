@@ -1,0 +1,32 @@
+# Configuration file for <https://github.com/sapcc/go-makefile-maker>
+
+binaries:
+  - name:        syslog-stdout
+    fromPackage: .
+    installTo:   bin/
+
+vendoring:
+  enabled: true
+
+golangciLint:
+  createConfig: true
+
+githubWorkflow:
+  global:
+    assignees:
+      - SuperSandro2000
+    ignorePaths: ["**.md"] # all Markdown files
+  license:
+    enabled: true
+  securityChecks:
+    enabled: true
+  spellCheck:
+    enabled: true
+    ignorePaths: [] # override global setting so that nothing is ignored
+
+renovate:
+  enabled: true
+
+verbatim: |
+  build/syslog-generator: util/generator.c
+    $(CC) -o $@ $<
