@@ -34,7 +34,8 @@ else
 endif
 
 install: FORCE build/syslog-stdout
-	install -D -m 0755 build/syslog-stdout "$(DESTDIR)$(PREFIX)/bin/syslog-stdout"
+	install -d -m 0755 "$(DESTDIR)$(PREFIX)/bin"
+	install -m 0755 build/syslog-stdout "$(DESTDIR)$(PREFIX)/bin/syslog-stdout"
 
 # which packages to test with "go test"
 GO_TESTPKGS := $(shell go list -f '{{if or .TestGoFiles .XTestGoFiles}}{{.ImportPath}}{{end}}' ./...)
