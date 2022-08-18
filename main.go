@@ -83,7 +83,7 @@ func readData(data []byte) {
 	message := string(data)
 
 	endOfCode := strings.Index(message, ">")
-	if -1 != endOfCode && 5 > endOfCode {
+	if endOfCode != -1 && endOfCode < 5 {
 		code, err := strconv.Atoi(string(data[1:endOfCode]))
 		if err == nil {
 			facility = fmt.Sprintf("%s.%s", indexInto(facilities, code>>3), indexInto(severities, code&0x07))
