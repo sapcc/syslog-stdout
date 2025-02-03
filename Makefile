@@ -39,7 +39,7 @@ GO_BUILDENV =
 build-all: build/syslog-stdout
 
 build/syslog-stdout: FORCE
-	@env $(GO_BUILDENV) go build $(GO_BUILDFLAGS) -ldflags '-s -w $(GO_LDFLAGS)' -o build/syslog-stdout .
+	env $(GO_BUILDENV) go build $(GO_BUILDFLAGS) -ldflags '-s -w $(GO_LDFLAGS)' -o build/syslog-stdout .
 
 DESTDIR =
 ifeq ($(shell uname -s),Darwin)
