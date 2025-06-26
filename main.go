@@ -31,12 +31,12 @@ func findHostname() string {
 
 var (
 	facilities = []string{
-		"kern", "user", "mail", "daemon", "auth", "syslog", "lpr", "news", //0..7
-		"uucp", "cron", "authpriv", "ftp", "ntp", "security", "console", "mark", //8..15
-		"local0", "local1", "local2", "local3", "local4", "local5", "local6", "local7", //16..23
+		"kern", "user", "mail", "daemon", "auth", "syslog", "lpr", "news", // 0..7
+		"uucp", "cron", "authpriv", "ftp", "ntp", "security", "console", "mark", // 8..15
+		"local0", "local1", "local2", "local3", "local4", "local5", "local6", "local7", // 16..23
 	}
 	severities = []string{
-		"emerg", "alert", "crit", "err", "warning", "notice", "info", "debug", //0..7
+		"emerg", "alert", "crit", "err", "warning", "notice", "info", "debug", // 0..7
 	}
 )
 
@@ -78,7 +78,7 @@ func readData(data []byte) {
 	now := time.Now().UTC()
 	fmt.Printf("%s.%06d %s %s %s\n",
 		now.Format("Jan 2 15:04:05"),
-		now.Nanosecond()/1000, //microsecond precision
+		now.Nanosecond()/1000, // microsecond precision
 		hostname,
 		facility,
 		strings.TrimSuffix(message, "\n"),
