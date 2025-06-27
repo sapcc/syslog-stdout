@@ -1,4 +1,5 @@
-// SPDX-FileCopyrightText: 2015-2016 SAP SE or an SAP affiliate company
+// SPDX-FileCopyrightText: 2015-2016 Morgan Auchede <morgan.auchede@gmail.com>
+// SPDX-FileCopyrightText: 2017 SAP SE or an SAP affiliate company
 // SPDX-License-Identifier: Apache-2.0
 
 package main
