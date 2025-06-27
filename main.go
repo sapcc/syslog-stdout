@@ -1,22 +1,6 @@
-/*******************************************************************************
-*
-* Copyright 2015-2016 Morgan Auchede <morgan.auchede@gmail.com>
-* Copyright 2017 SAP SE
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You should have received a copy of the License along with this
-* program. If not, you may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*******************************************************************************/
+// SPDX-FileCopyrightText: 2015-2016 Morgan Auchede <morgan.auchede@gmail.com>
+// SPDX-FileCopyrightText: 2017 SAP SE or an SAP affiliate company
+// SPDX-License-Identifier: Apache-2.0
 
 package main
 
@@ -48,12 +32,12 @@ func findHostname() string {
 
 var (
 	facilities = []string{
-		"kern", "user", "mail", "daemon", "auth", "syslog", "lpr", "news", //0..7
-		"uucp", "cron", "authpriv", "ftp", "ntp", "security", "console", "mark", //8..15
-		"local0", "local1", "local2", "local3", "local4", "local5", "local6", "local7", //16..23
+		"kern", "user", "mail", "daemon", "auth", "syslog", "lpr", "news", // 0..7
+		"uucp", "cron", "authpriv", "ftp", "ntp", "security", "console", "mark", // 8..15
+		"local0", "local1", "local2", "local3", "local4", "local5", "local6", "local7", // 16..23
 	}
 	severities = []string{
-		"emerg", "alert", "crit", "err", "warning", "notice", "info", "debug", //0..7
+		"emerg", "alert", "crit", "err", "warning", "notice", "info", "debug", // 0..7
 	}
 )
 
@@ -95,7 +79,7 @@ func readData(data []byte) {
 	now := time.Now().UTC()
 	fmt.Printf("%s.%06d %s %s %s\n",
 		now.Format("Jan 2 15:04:05"),
-		now.Nanosecond()/1000, //microsecond precision
+		now.Nanosecond()/1000, // microsecond precision
 		hostname,
 		facility,
 		strings.TrimSuffix(message, "\n"),
